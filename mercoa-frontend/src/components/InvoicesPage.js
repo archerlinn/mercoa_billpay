@@ -74,7 +74,7 @@ const InvoicesPage = ({ entityId, email }) => {
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-indigo-100 text-indigo-700 text-sm uppercase tracking-wide">
                 <tr>
-                  <th className="px-4 py-3 text-left">Invoice ID</th>
+                  <th className="px-4 py-3 text-left">Vendor</th>
                   <th className="px-4 py-3 text-left">Status</th>
                   <th className="px-4 py-3 text-left">Amount</th>
                   <th className="px-4 py-3 text-left">Due Date</th>
@@ -84,11 +84,10 @@ const InvoicesPage = ({ entityId, email }) => {
               <tbody className="text-sm divide-y divide-gray-100">
                 {invoices.data.map((inv) => (
                   <tr key={inv.id} className="hover:bg-gray-50">
-                    <td className="px-4 py-3 font-mono text-indigo-600">{inv.id}</td>
+                    <td className="px-4 py-3 capitalize">{inv.vendor?.name || 'Unknown'}</td>
                     <td className="px-4 py-3 capitalize">{inv.status}</td>
                     <td className="px-4 py-3">
-                      ${inv.totalAmount?.amount?.toFixed(2) || '0.00'}
-                    </td>
+                        {inv.currency} ${inv.amount?.toFixed(2) || '0.00'}                    </td>
                     <td className="px-4 py-3">
                       {inv.dueDate ? new Date(inv.dueDate).toLocaleDateString() : '—'}
                     </td>
@@ -125,7 +124,12 @@ const InvoicesPage = ({ entityId, email }) => {
                 invoiceId={editorInvoiceId}
                 documentPosition="left"
                 heightOffset={140}
-                onUpdate={handleInvoiceUpdate}
+                onUpdate={(invoice) => {
+                    if (!invoice) return;
+                    console.log('✅ Invoice updated:', invoice);
+                    closeEditor();
+                    window.location.reload();
+                }}
               />
             </motion.div>
           </div>

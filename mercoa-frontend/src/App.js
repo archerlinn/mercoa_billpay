@@ -6,7 +6,7 @@ import SignupForm from './components/SignupForm';
 import OnboardingForm from './components/OnboardingForm';
 import HomePage from './components/HomePage';
 import InvoicesPage from './components/InvoicesPage';
-import CreateInvoicePage from './components/CreateInvoicePage';
+import NewInvoicePage from './components/NewInvoicePage';
 
 function App() {
   const navigate = useNavigate();
@@ -132,7 +132,10 @@ function App() {
             />
           }
         />
-        <Route path="/invoices/new" element={<CreateInvoicePage entityId={user.entityId} />} />
+        <Route
+          path="/invoices/new"
+          element={<NewInvoicePage entityId={user.entityId} email={user.email} />}
+        />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </motion.div>
