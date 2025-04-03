@@ -32,7 +32,13 @@ const HomePage = ({ entityId, entityName, entityLogo, onLogout }) => {
     >
       <div className="flex justify-between items-center mb-6">
         <div className="flex items-center space-x-4">
-          {entityLogo && <img src={entityLogo} alt="Logo" className="w-10 h-10 rounded-full" />}
+          {entityLogo ? (
+            <img src={entityLogo} alt="Business Logo" className="w-10 h-10 rounded-full" />
+          ) : (
+            <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-sm text-gray-500">
+              🏢
+            </div>
+          )}
           <h1 className="text-2xl font-bold">{entityName || 'Business Dashboard'}</h1>
         </div>
         <button
@@ -48,8 +54,12 @@ const HomePage = ({ entityId, entityName, entityLogo, onLogout }) => {
           <motion.div
             key={index}
             whileHover={{ scale: 1.05 }}
+            transition={{ duration: 0.3, delay: index * 0.05 }}
             className="p-6 bg-white rounded-2xl shadow-md hover:shadow-lg transition cursor-pointer"
             onClick={card.action}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => e.key === 'Enter' && card.action()}
           >
             <h2 className="text-xl font-semibold mb-2">{card.title}</h2>
             <p className="text-gray-600 text-sm">{card.description}</p>

@@ -15,6 +15,49 @@ MERCOA_API_URL = "https://api.mercoa.com/entity"
 UPLOAD_DIR = "uploads/"
 User = get_user_model()
 
+@csrf_exempt
+def get_mercoa_token(request):
+    if request.method != "POST":
+        return HttpResponseNotAllowed(["POST"])
+
+    try:
+        data = json.loads(request.body)
+        email = data.get("email")
+
+        user = User.objects.get(username=email)
+        profile = user.profile
+
+        if not profile.entity_id:
+            return JsonResponse({"status": "error", "message": "Entity not onboarded"}, status=400)
+
+        url = f"https://api.mercoa.com/entity/{profile.entity_id}/token"
+        headers = {
+            "Authorization": f"Bearer {MERCOA_API_KEY}",
+            "Content-Type": "application/json"
+        }
+
+        res = requests.post(url, headers=headers, json={})
+        res.raise_for_status()
+
+        print("📨 Mercoa token raw response:", res.text)
+
+        token = res.text.strip('"')  # ✅ just clean the raw string
+        return JsonResponse({"status": "success", "token": token})
+
+    except requests.exceptions.HTTPError as api_err:
+        print("❌ Mercoa API Error:", api_err)
+        print("🔍 Mercoa Response:", res.text if 'res' in locals() else "No response")
+        return JsonResponse({
+            "status": "error",
+            "message": "Mercoa API failed",
+            "details": str(api_err),
+            "response": res.text if 'res' in locals() else None,
+        }, status=res.status_code if 'res' in locals() else 500)
+
+    except Exception as e:
+        traceback.print_exc()
+        return JsonResponse({"status": "error", "message": str(e)}, status=500)
+
 def save_base64_file(base64_string, filename, upload_dir=UPLOAD_DIR):
     try:
         format, imgstr = base64_string.split(';base64,')
@@ -210,3 +253,77 @@ def create_entity(request):
             "status": "error",
             "message": f"Unexpected error: {str(general_err)}"
         }, status=500)
+
+@csrf_exempt
+def list_invoices(request):
+    if request.method != "POST":
+        return HttpResponseNotAllowed(["POST"])
+
+    try:
+        data = json.loads(request.body)
+        entity_id = data.get("entity_id")
+
+        if not entity_id:
+            return JsonResponse({"status": "error", "message": "Missing entity_id"}, status=400)
+
+        headers = {
+            "Authorization": f"Bearer {MERCOA_API_KEY}",
+            "Content-Type": "application/json"
+        }
+
+        # ✅ Correct endpoint
+        url = f"https://api.mercoa.com/entity/{entity_id}/invoices"
+        res = requests.get(url, headers=headers)
+        res.raise_for_status()
+
+        invoices = res.json()
+        print("📄 Invoices:", invoices)
+
+        return JsonResponse({"status": "success", "invoices": invoices})
+
+    except requests.exceptions.RequestException as e:
+        print("❌ Invoice fetch failed:", e)
+        print("🔍 Response:", res.text if 'res' in locals() else "No response")
+        return JsonResponse({
+            "status": "error",
+            "message": "API request failed",
+            "details": str(e),
+            "response": res.text if 'res' in locals() else None
+        }, status=500)
+
+    except Exception as e:
+        traceback.print_exc()
+        return JsonResponse({"status": "error", "message": str(e)}, status=500)
+
+@csrf_exempt
+def create_invoice(request):
+    if request.method != "POST":
+        return HttpResponseNotAllowed(["POST"])
+
+    try:
+        data = json.loads(request.body)
+        headers = {
+            "Authorization": f"Bearer {MERCOA_API_KEY}",
+            "Content-Type": "application/json"
+        }
+
+        payload = {
+            "entityId": data["entityId"],         # Sender
+            "payeeId": data["payeeId"],           # Recipient
+            "memo": data.get("memo", ""),
+            "dueDate": data.get("dueDate"),
+            "lineItems": data["lineItems"],       # List of line items
+        }
+
+        res = requests.post("https://api.mercoa.com/invoice", headers=headers, json=payload)
+        res.raise_for_status()
+        invoice = res.json()
+
+        return JsonResponse({"status": "success", "invoice": invoice})
+
+    except requests.exceptions.RequestException as e:
+        return JsonResponse({"status": "error", "message": "Mercoa API error", "details": str(e)}, status=500)
+
+    except Exception as e:
+        traceback.print_exc()
+        return JsonResponse({"status": "error", "message": str(e)}, status=500)
