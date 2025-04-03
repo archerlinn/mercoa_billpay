@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+env/
+venv/
+*.sqlite3
+
+# Django
+*.log
+db.sqlite3
+staticfiles/
+
+# Node
+node_modules/
+dist/
+.env
+.DS_Store
+
+# React
+mercoa_frontend/build/
+
+# VSCode
+.vscode/
