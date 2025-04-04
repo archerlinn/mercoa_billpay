@@ -14,7 +14,7 @@ from django.conf import settings
 from datetime import datetime, timezone
 from dateutil.parser import parse as parse_date
 
-MERCOA_API_KEY = "4956c7d4b2944b8aa656a2ae8b604732"
+MERCOA_API_KEY = os.getenv("MERCOA_API_KEY")
 MERCOA_API_URL = "https://api.mercoa.com/entity"
 UPLOAD_DIR = "uploads/"
 User = get_user_model()
