@@ -24,15 +24,15 @@ This is a full-featured, production-grade **Accounts Payable** SaaS platform bui
 | ✅ Entity Users | Add/edit users with roles (admin/approver/general) |
 | ✅ Vendors Management | Auto-pulled from invoices, full UI for viewing/editing vendors |
 | ✅ Payment Methods | Add/edit bank accounts and checks using Mercoa UI |
-| ✅ AP Aging Report | Automatically calculated and displayed summary |
+| ✅ AP Aging Report | Automatically calculated and displayed summary (support PDF export!) |
 | ⚡ Fully Embedded | Custom UI powered by Mercoa SDK + JWT tokens |
 
 ## 🧲 Demo
 
 ```
-🌐 [LIVE URL HERE]
-🧑‍💼 Email: demo@yourbiz.com
-🔐 Password: demo123
+🌐 [https://archerlinn.github.io/mercoa_billpay/]
+🧑‍💼 Email: test@test.com
+🔐 Password: test123
 ```
 
 ## 🧠 Architecture
@@ -93,5 +93,3 @@ MERCOA_ORG_ID=your_org_id
 | View Invoice | ![View Invoice](screenshots/invoice.png) |
 | Approval Policy | ![Approval Policy](screenshots/approvals.png) |
 | AP Aging Report | ![Aging Report](screenshots/ap-aging.png) |
-
-> Add your screenshots to the `screenshots/` folder and update these links accordingly.
