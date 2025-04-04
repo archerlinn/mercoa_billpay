@@ -2,7 +2,7 @@
 
 This is a full-featured, production-grade **Accounts Payable** SaaS platform built for the [Mercoa Interview Project](https://www.mercoa.com/). It uses the **Mercoa API and React SDK** to build a bill management system from the ground up — including KYB onboarding, invoice workflows, approval rules, vendors, and payment methods.
 
-> ✅ Everything works. Log in, onboard, upload invoices, assign approvers, approve, mark as paid, ap aging report, and more.
+> ✅ Everything works. Log in, onboard, invoices, approval policy, approve, mark as paid, ap aging report, and more.
 
 ## 🔧 Tech Stack
 
