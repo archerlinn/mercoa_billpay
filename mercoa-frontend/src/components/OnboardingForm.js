@@ -271,27 +271,46 @@ const MultiStepOnboarding = ({ onComplete, email }) => {
   };
 
   return (
-    <motion.div className="max-w-3xl mx-auto bg-white/90 backdrop-blur-lg shadow-2xl rounded-3xl p-10 border border-white/40" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
-      <h2 className="text-3xl font-bold text-indigo-800 mb-2 text-center">Business Onboarding</h2>
-      {renderProgressBar()}
-      <div className="text-center mb-6 text-gray-600 text-sm tracking-wide uppercase">Step {step + 1} of {steps.length}: {steps[step]}</div>
-      {renderStep()}
-      <div className="flex justify-between mt-10">
-        <button onClick={() => setStep(step - 1)} disabled={step === 0} className="px-6 py-2 rounded-lg bg-gray-300 hover:bg-gray-400 text-gray-700 disabled:opacity-50 transition-all">Back</button>
-        {step < steps.length - 1 && (
+    <div className="min-h-screen flex items-center justify-center">
+      <motion.div
+        className="max-w-3xl w-full bg-white/90 backdrop-blur-lg shadow-2xl rounded-3xl p-10 border border-white/40"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+      >
+        <h2 className="text-3xl font-bold text-indigo-800 mb-2 text-center">Business Onboarding</h2>
+        {renderProgressBar()}
+        <div className="text-center mb-6 text-gray-600 text-sm tracking-wide uppercase">
+          Step {step + 1} of {steps.length}: {steps[step]}
+        </div>
+        {renderStep()}
+        <div className="flex justify-between mt-10">
           <button
-            onClick={() => {
-              if (validateStep()) setStep(step + 1);
-            }}
-            className="px-6 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white transition-all"
+            onClick={() => setStep(step - 1)}
+            disabled={step === 0}
+            className="px-6 py-2 rounded-lg bg-gray-300 hover:bg-gray-400 text-gray-700 disabled:opacity-50 transition-all"
           >
-            Next
+            Back
           </button>
+          {step < steps.length - 1 && (
+            <button
+              onClick={() => {
+                if (validateStep()) setStep(step + 1);
+              }}
+              className="px-6 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white transition-all"
+            >
+              Next
+            </button>
+          )}
+        </div>
+        {entityId && (
+          <div className="mt-6 text-center text-green-600 font-medium">
+            ✅ Entity created! ID: {entityId}
+          </div>
         )}
-      </div>
-      {entityId && <div className="mt-6 text-center text-green-600 font-medium">✅ Entity created! ID: {entityId}</div>}
-    </motion.div>
-  );
+      </motion.div>
+    </div>
+  );  
 };
 
 export default MultiStepOnboarding;
