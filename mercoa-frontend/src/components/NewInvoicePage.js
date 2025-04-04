@@ -4,6 +4,7 @@ import { MercoaSession, PayableDetailsV1 } from '@mercoa/react';
 import '@mercoa/react/dist/style.css';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import BackToHomeButton from './BackToHomeButton';
 
 const NewInvoicePage = ({ entityId, email }) => {
   const [token, setToken] = useState(null);
@@ -13,10 +14,7 @@ const NewInvoicePage = ({ entityId, email }) => {
   useEffect(() => {
     const fetchToken = async () => {
       try {
-        const res = await axios.post('http://localhost:8000/api/mercoa/token/', {
-          email,
-        });
-
+        const res = await axios.post('http://localhost:8000/api/mercoa/token/', { email });
         if (res.data.status === 'success') {
           setToken(res.data.token);
         } else {
@@ -33,27 +31,30 @@ const NewInvoicePage = ({ entityId, email }) => {
   }, [email]);
 
   const handleInvoiceCreated = (invoice) => {
-    if (!invoice) {
-      navigate(`/invoices/${entityId}`);
-    } else {
-      navigate(`/invoices/${entityId}`);
-    }
+    navigate(`/invoices/${entityId}`);
   };
 
   if (loading || !token) {
-    return <div className="text-center py-10 text-gray-600">Loading invoice editor...</div>;
+    return (
+      <div className="min-h-screen flex items-center justify-center text-gray-600">
+        <p className="text-lg py-10">Loading invoice editor...</p>
+      </div>
+    );
   }
 
   return (
     <MercoaSession token={token}>
       <div className="min-h-screen bg-gray-50 py-10 px-6">
+        <BackToHomeButton />
         <motion.div
-          className="bg-white max-w-4xl mx-auto p-8 rounded-2xl shadow-lg"
-          initial={{ opacity: 0, y: 10 }}
+          className="bg-white max-w-4xl mx-auto p-10 rounded-2xl shadow-2xl"
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
+          transition={{ duration: 0.5 }}
         >
-          <h1 className="text-3xl font-semibold text-indigo-700 mb-6">Create a New Invoice</h1>
+          <h1 className="text-4xl font-bold text-indigo-700 mb-8 tracking-wide">
+            Create a New Invoice
+          </h1>
           <PayableDetailsV1
             documentPosition="left"
             heightOffset={160}

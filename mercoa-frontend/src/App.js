@@ -7,6 +7,11 @@ import OnboardingForm from './components/OnboardingForm';
 import HomePage from './components/HomePage';
 import InvoicesPage from './components/InvoicesPage';
 import NewInvoicePage from './components/NewInvoicePage';
+import EntityUsersPage from './components/EntityUsersPage';
+import ApprovalPolicyPage from './components/ApprovalPolicyPage';
+import PaymentMethodsPage from './components/PaymentMethodsPage';
+import VendorsPage from './components/VendorsPage';
+import AgingReportPage from './components/AgingReportPage';
 
 function App() {
   const navigate = useNavigate();
@@ -17,6 +22,7 @@ function App() {
     entityName: '',
     entityLogo: '',
   });
+  const [loadingUser, setLoadingUser] = useState(true);
 
   useEffect(() => {
     const saved = localStorage.getItem('mercoa_entity');
@@ -25,6 +31,7 @@ function App() {
       const parsed = JSON.parse(saved);
       setUser({ ...parsed, email: email || '' });
     }
+    setLoadingUser(false);
   }, []);
 
   const handleLogin = (data) => {
@@ -80,7 +87,9 @@ function App() {
         <Route
           path="/"
           element={
-            !isLoggedIn ? (
+            loadingUser ? (
+              <div className="text-center py-10 text-gray-600">Loading...</div>
+            ) : !isLoggedIn ? (
               <Navigate to="/login" />
             ) : isOnboarded ? (
               <HomePage
@@ -126,16 +135,34 @@ function App() {
         <Route
           path="/invoices/:entityId"
           element={
-            <InvoicesPage
-              entityId={user.entityId}
-              email={user.email}
-            />
+            user.entityId && user.email ? (
+              <InvoicesPage
+                entityId={user.entityId}
+                email={user.email}
+              />
+            ) : (
+              <div className="text-center mt-10 text-gray-500">Loading invoice data...</div>
+            )
           }
         />
         <Route
           path="/invoices/new"
           element={<NewInvoicePage entityId={user.entityId} email={user.email} />}
         />
+        <Route
+          path="/users"
+          element={<EntityUsersPage entityId={user.entityId} />}
+        />
+        <Route
+          path="/approval-policy"
+          element={<ApprovalPolicyPage entityId={user.entityId} />}
+        />
+        <Route path="/payment-methods" element={<PaymentMethodsPage />} />
+        <Route
+          path="/vendors"
+          element={<VendorsPage entityId={user.entityId} />}
+        />
+        <Route path="/aging-report" element={<AgingReportPage entityId={user.entityId} />} />        
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </motion.div>
